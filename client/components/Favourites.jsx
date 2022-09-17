@@ -33,6 +33,7 @@ function Favourites() {
         </thead>
         <tbody>
           {favourites?.map((beer) => {
+            console.log(beer)
             return (
               <tr key={Hash(beer.id + beer.name)}>
                 <td>{beer.id}</td>

@@ -9,7 +9,6 @@ function favourites(state = [], action) {
     case SAVE_FAVOURITE:
       return [...state, payload]
     case DEL_FAVOURITE:
-      console.log('Favourites reducer says deleting', payload.brewdog_id)
       return state.filter((beer) => !beer.brewdog_id === payload.brewdog_id)
     default:
       return state

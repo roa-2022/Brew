@@ -7,10 +7,15 @@ import {
 
 export const REQUEST_BEER = 'REQUEST_BEER'
 export const RECEIVE_BEER = 'RECEIVE_BEER'
-export const RECEIVE_SEARCH = 'RECEIVE_SEARCH'
-export const SHOW_ERROR = 'SHOW_ERROR'
+
 export const REQUEST_SEARCH = 'REQUEST_SEARCH'
+export const RECEIVE_SEARCH = 'RECEIVE_SEARCH'
+
+export const SHOW_ERROR = 'SHOW_ERROR'
+
+export const FETCH_FAVOURITES = 'FETCH_FAVOURITES'
 export const SHOW_FAVOURITES = 'SHOW_FAVOURITES'
+
 export const SAVE_FAVOURITE = 'SAVE_FAVOURITE'
 export const DEL_FAVOURITE = 'DEL_FAVOURITE'
 
@@ -47,14 +52,20 @@ export function showError(errorMessage) {
   }
 }
 
-export function fetchFavourites(favourites) {
+export function fetchFavourites() {
+  return {
+    type: FETCH_FAVOURITES,
+  }
+}
+
+export function showFavourites(favourites) {
   return {
     type: SHOW_FAVOURITES,
     payload: favourites,
   }
 }
 
-export function saveFavourites(favourite) {
+export function saveFavourite(favourite) {
   return {
     type: SAVE_FAVOURITE,
     payload: favourite,
@@ -69,16 +80,14 @@ export function delFavourites(beer) {
 }
 
 export function fetchRandomBeer() {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(requestBeer())
-    return request
-      .get(`https://api.punkapi.com/v2/beers/random`)
-      .then((res) => {
-        dispatch(receiveBeer(res.body))
-      })
-      .catch((err) => {
-        dispatch(showError(err.message))
-      })
+    try {
+      const res = await request.get(`https://api.punkapi.com/v2/beers/random`)
+      dispatch(receiveBeer(res.body))
+    } catch (err) {
+      dispatch(showError(err.message))
+    }
   }
 }
 
@@ -118,33 +127,52 @@ export function searchBeerRecipes(query) {
 
   console.log(`https://api.punkapi.com/v2/beers?${queryString.join('&')}`)
 
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(requestSearch())
-    return request
-      .get(`https://api.punkapi.com/v2/beers?${queryString.join('&')}`)
-      .then((res) => {
-        dispatch(receiveSearch(res.body))
-      })
-      .catch((err) => {
-        dispatch(showError(err.message))
-      })
+    try {
+      const res = await request.get(
+        `https://api.punkapi.com/v2/beers?${queryString.join('&')}`
+      )
+      dispatch(receiveSearch(res.body))
+    } catch (err) {
+      dispatch(showError(err.message))
+    }
   }
 }
 
 export function getFavourites() {
-  return (dispatch) => {
-    return getFavouritesApi().then((res) => dispatch(saveFavourites(res)))
+  return async (dispatch) => {
+    dispatch(fetchFavourites())
+    try {
+      const res = await getFavouritesApi()
+      console.log(res)
+      return dispatch(showFavourites(res))
+    } catch (err) {
+      dispatch(showError(err.message))
+    }
   }
 }
 
-export function saveBeerToFavourites(beer) {
-  return (dispatch) => {
-    return addFavouriteApi(beer).then((res) => dispatch(saveFavourites(res)))
+export function addFavourite(beer) {
+  return async (dispatch) => {
+    try {
+      const res = await addFavouriteApi(beer)
+      return dispatch(saveFavourite(res))
+    } catch (err) {
+      dispatch(showError(err.message))
+    }
   }
 }
 
 export function deleteBeerFromFavourites(id) {
-  return (dispatch) => {
-    return delFavouriteApi(id).then((res) => dispatch(delFavourites(res)))
+  return async (dispatch) => {
+    delFavourites(id)
+    try {
+      const res = await delFavouriteApi(id)
+      console.log(`Deleted ${res} rows from favourites.`)
+      return dispatch(getFavourites())
+    } catch (err) {
+      dispatch(showError(err.message))
+    }
   }
 }
