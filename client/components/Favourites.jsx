@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Hash from 'hash-string'
 
-import { getFavourites, deleteBeerRecipe } from '../actions'
+import { getFavourites, deleteBeerFromFavourites } from '../actions'
 
 function Favourites() {
   const dispatch = useDispatch()
@@ -14,7 +14,7 @@ function Favourites() {
   const favourites = useSelector((state) => state.favourites)
 
   const handleClick = (id) => {
-    dispatch(deleteBeerRecipe(id))
+    dispatch(deleteBeerFromFavourites(id))
   }
 
   return (

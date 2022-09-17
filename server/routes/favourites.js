@@ -28,7 +28,6 @@ router.delete('/:id', async (req, res) => {
   try {
     const beerId = req.params.id
     const res = await db.delFavourite(beerId)
-    console.log('Routes says: ', res)
     const beers = db.getFavourites()
     res.json(beers)
   } catch (err) {
