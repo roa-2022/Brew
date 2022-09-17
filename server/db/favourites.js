@@ -1,4 +1,4 @@
-const conn = require('./connection')
+const conn = require('./favourites')
 
 function getFavourites(db = conn) {
   return db('favourites').select()
