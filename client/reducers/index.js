@@ -1,7 +1,13 @@
 import { combineReducers } from 'redux'
 
-import fruits from './fruits'
+import randomBeer from './randomBeer'
+import searchBeerRecipes from './searchBeerRecipes'
+import errorMessage from './errorMessage'
+import favourites from './favourites'
 
 export default combineReducers({
-  fruits,
+  randomBeer,
+  searchBeerRecipes,
+  favourites,
+  errorMessage,
 })

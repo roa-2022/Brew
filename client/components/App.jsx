@@ -1,25 +1,25 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { Link, NavLink, useNavigate, Routes, Route } from 'react-router-dom'
 
-import { fetchFruits } from '../actions'
+import { Container } from '@mui/material'
+
+import Nav from './Nav'
+import Favourites from './Favourites'
+import Form from './Form'
+import ErrorMessage from './ErrorMessage'
 
 function App() {
-  const fruits = useSelector((state) => state.fruits)
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(fetchFruits())
-  }, [])
-
   return (
     <>
-      <div className="app">
-        <h1>Fullstack Boilerplate - with Fruits!</h1>
-        <ul>
-          {fruits.map((fruit) => (
-            <li key={fruit}>{fruit}</li>
-          ))}
-        </ul>
-      </div>
+      <Container>
+        <ErrorMessage />
+        <Nav />
+      </Container>
+      <Container>
+        <Routes>
+          <Route path="/favourites" element={<Favourites />} />
+        </Routes>
+      </Container>
     </>
   )
 }

@@ -4,26 +4,26 @@ import { screen, render } from '@testing-library/react'
 
 import App from './App'
 import store from '../store'
-import { fetchFruits } from '../actions'
+import { fetchFavourites } from '../actions'
 
 jest.mock('../actions')
 
-fetchFruits.mockImplementation(() => () => {})
+fetchFavourites.mockImplementation(() => () => {})
 
-test('page header includes fruit', () => {
+test('page header includes favourites', () => {
   render(
     <Provider store={store}>
       <App />
     </Provider>
   )
   const heading = screen.getByRole('heading')
-  expect(heading.innerHTML).toMatch(/Fruit/)
+  expect(heading.innerHTML).toMatch(/Favourites/)
 })
 
-test('renders an <li> for each fruit', () => {
-  const fruits = ['orange', 'persimmons', 'kiwi fruit']
+test('renders an <li> for each favourite', () => {
+  const favourites = ['orange', 'persimmons', 'kiwi fruit']
   jest.spyOn(store, 'getState')
-  store.getState.mockImplementation(() => ({ fruits }))
+  store.getState.mockImplementation(() => ({ favourites }))
 
   render(
     <Provider store={store}>
@@ -34,11 +34,11 @@ test('renders an <li> for each fruit', () => {
   expect(li).toHaveLength(3)
 })
 
-test('dispatches fetchFruits action', () => {
+test('dispatches fetchFavourites action', () => {
   render(
     <Provider store={store}>
       <App />
     </Provider>
   )
-  expect(fetchFruits).toHaveBeenCalled()
+  expect(fetchFavourites).toHaveBeenCalled()
 })
