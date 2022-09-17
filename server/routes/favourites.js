@@ -5,9 +5,17 @@ const db = require('../db/favourites')
 // GET /api/v1/
 router.get('/', async (req, res) => {
   try {
-    // res.json()
-    const beer = await db.getFavourites()
-    res.json(beer)
+    const result = await db.getFavourites()
+    res.json(result)
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+})
+
+router.get('/:id', async (req, res) => {
+  try {
+    const result = await db.getFavourite(req.params.id)
+    res.json(result)
   } catch (err) {
     res.status(500).send(err.message)
   }
@@ -15,10 +23,8 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const data = req.body
-    const beerId = await db.addFavourite(data)
-    const getBeer = await db.getFavourite(beerId[0])
-    res.json(getBeer)
+    const result = await db.addFavourite(req.body)
+    res.json(result)
   } catch (err) {
     res.status(500).send(err.message)
   }
@@ -26,10 +32,8 @@ router.post('/', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    const beerId = req.params.id
-    const res = await db.delFavourite(beerId)
-    const beers = db.getFavourites()
-    res.json(beers)
+    const result = await db.delFavourite(req.params.id)
+    res.json(result)
   } catch (err) {
     res.status(500).send(err.message)
   }
