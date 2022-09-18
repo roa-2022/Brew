@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Hash from 'hash-string'
-import { Table, Button } from 'react-bootstrap'
+import { Form, Table, Button } from 'react-bootstrap'
 
-import { getFavourites, deleteBeerFromFavourites } from '../actions'
+import {
+  getFavourites,
+  deleteBeerFromFavourites,
+  editFavourite,
+} from '../actions'
 
 function Favourites() {
   const favourites = useSelector((state) => state.favourites)
@@ -26,20 +30,45 @@ function Favourites() {
             <th>ID</th>
             <th>BrewDog ID</th>
             <th>Name</th>
-            <th>Created At</th>
+            <th>Added On</th>
             <th>Brewed</th>
             <th>Remove</th>
           </tr>
         </thead>
         <tbody>
           {favourites?.map((beer) => {
+            const brewedBool = Boolean(beer.brewed)
+
             return (
               <tr key={Hash(beer.id + beer.name)}>
                 <td>{beer.id}</td>
                 <td>{beer.brewdog_id}</td>
                 <td>{beer.name}</td>
-                <td>{beer.created_at}</td>
-                <td>{beer.brewed}</td>
+                <td>{new Date(beer.created_at).toLocaleDateString()}</td>
+                <td>
+                  {/* <label htmlFor={beer.name + 'brewed'} hidden>
+                    Brewed
+                  </label>
+                  <input
+                    type="checkbox"
+                    name={beer.name + 'brewed'}
+                    id={beer.id}
+                    checked={Boolean(beer.brewed)}
+                  /> */}
+                  <Form.Check
+                    type="checkbox"
+                    checked={brewedBool}
+                    onChange={() =>
+                      dispatch(
+                        editFavourite({
+                          id: beer.id,
+                          brewed: !brewedBool,
+                        })
+                      )
+                    }
+                    aria-label={`Brewed ${beer.name}`}
+                  />
+                </td>
                 <td>
                   <Button
                     variant="danger"

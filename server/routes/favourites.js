@@ -30,6 +30,15 @@ router.post('/', async (req, res) => {
   }
 })
 
+router.patch('/', async (req, res) => {
+  try {
+    const result = await db.editFavourite(req.body)
+    res.json(result)
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+})
+
 router.delete('/:id', async (req, res) => {
   try {
     const result = await db.delFavourite(req.params.id)

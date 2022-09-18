@@ -174,3 +174,7 @@ export function deleteBeerFromFavourites(id) {
     }
   }
 }
+
+export function editFavourite(beer) {
+  return console.log(beer)
+}
