@@ -3,10 +3,9 @@ import { useDispatch } from 'react-redux'
 import { Slider } from '@mui/material'
 
 // Actions
-import { fetchRandomBeer, searchBeerRecipes } from '../actions'
+import { searchBeerRecipes } from '../actions'
 
 // Components
-import RandomBeer from './RandomBeer'
 import SearchResults from './SearchResults'
 
 function Form() {
@@ -140,12 +139,6 @@ function Form() {
     setQuery({ ...query, ebc: newValue })
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
-    dispatch(fetchRandomBeer())
-  }
-
   const handleSearchSubmit = (e) => {
     e.preventDefault()
 
@@ -245,10 +238,7 @@ function Form() {
           />
         </fieldset>
       </form>
-      <form>
-        <button onClick={handleSubmit}>Fetch Random Recipe</button>
-      </form>
-      {<RandomBeer />}
+
       {<SearchResults />}
     </div>
   )

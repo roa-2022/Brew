@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink, useNavigate, Routes, Route } from 'react-router-dom'
 
-import { Container } from '@mui/material'
-
 import Nav from './Nav'
 import Home from './Home'
 import Favourites from './Favourites'
 import Form from './Form'
 import ErrorMessage from './ErrorMessage'
+import RandomBeer from './RandomBeer'
 
 function App() {
   return (
     <>
-      <Container>
+      <div className="container">
         <ErrorMessage />
         <Nav />
-      </Container>
-      <Container>
+      </div>
+      <div className="container">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/favourites" element={<Favourites />} />
+          <Route path="/search" element={<Form />} />
+          <Route path="/random" element={<RandomBeer />} />
         </Routes>
-      </Container>
+      </div>
     </>
   )
 }

@@ -145,7 +145,6 @@ export function getFavourites() {
     dispatch(fetchFavourites())
     try {
       const res = await getFavouritesApi()
-      console.log(res)
       return dispatch(showFavourites(res))
     } catch (err) {
       dispatch(showError(err.message))
@@ -157,7 +156,7 @@ export function addFavourite(beer) {
   return async (dispatch) => {
     try {
       const res = await addFavouriteApi(beer)
-      return dispatch(saveFavourite(res))
+      return dispatch(getFavourites())
     } catch (err) {
       dispatch(showError(err.message))
     }
@@ -169,7 +168,6 @@ export function deleteBeerFromFavourites(id) {
     delFavourites(id)
     try {
       const res = await delFavouriteApi(id)
-      console.log(`Deleted ${res} rows from favourites.`)
       return dispatch(getFavourites())
     } catch (err) {
       dispatch(showError(err.message))
