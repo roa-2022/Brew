@@ -1,13 +1,24 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Stack, Table } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Button, Stack, Table } from 'react-bootstrap'
 
 import { SRMToRGBCSS } from './Utils'
+
+import { addFavourite } from '../actions'
 
 import Hash from 'hash-string'
 
 function RandomBeer() {
+  const dispatch = useDispatch()
   const searchResults = useSelector((state) => state.searchBeerRecipes)
+
+  const handleFavourite = (e) => {
+    const beer = { brewdog_id: e.target.id, name: e.target.name }
+
+    e.target.className = 'btn btn-success disabled'
+
+    dispatch(addFavourite(beer))
+  }
 
   return (
     <div className="container">
@@ -26,6 +37,14 @@ function RandomBeer() {
               <h3 className="text-center">
                 #{beer.id} {beer.name}
               </h3>
+              <Button
+                variant="secondary"
+                id={beer.id}
+                name={beer.name}
+                onClick={(e) => handleFavourite(e)}
+              >
+                Add to Favourites
+              </Button>
               <p>{beer.description}</p>
               <p>
                 <b>Malt:</b>{' '}

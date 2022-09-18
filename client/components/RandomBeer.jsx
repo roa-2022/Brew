@@ -34,7 +34,7 @@ function RandomBeer() {
   const handleFavourite = () => {
     const beer = { brewdog_id: randomBeer[0].id, name: randomBeer[0].name }
 
-    setIsFavourite('success' + ' disabled')
+    setIsFavourite('success' + ',disabled')
 
     dispatch(addFavourite(beer))
   }
