@@ -322,7 +322,7 @@ function RandomBeer() {
               <Table>
                 <thead>
                   <tr>
-                    <th>Mash Temperature</th>
+                    <th colSpan="2">Mash Temperature</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -357,7 +357,7 @@ function RandomBeer() {
                 <Table>
                   <thead>
                     <tr>
-                      <th>Twist</th>
+                      <th colSpan="2">Twist</th>
                     </tr>
                   </thead>
                   <tbody>
