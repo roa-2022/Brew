@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Switch, FormGroup, FormControlLabel } from '@mui/material'
+import { Box, Switch, FormControlLabel } from '@mui/material'
+import { Button, Form, Table } from 'react-bootstrap'
 
-import { saveBeerToFavourites } from '../actions'
+import { fetchRandomBeer, addFavourite, getFavourites } from '../actions'
 
 import {
   SRMToRGBCSS,
@@ -16,68 +17,91 @@ import {
 import Hash from 'hash-string'
 
 function RandomBeer() {
+  const favourites = useSelector((state) => state.favourites)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getFavourites())
+  }, [])
 
   const randomBeer = useSelector((state) => state.randomBeer)
   const [imperialTemp, setImperialTemp] = useState(false)
   const [imperialUnits, setImperialUnits] = useState(false)
   const [ounces, setOunces] = useState(false)
   const [kcal, setKcal] = useState(false)
+  const [isFavourite, setIsFavourite] = useState('secondary')
 
   const handleFavourite = () => {
     const beer = { brewdog_id: randomBeer[0].id, name: randomBeer[0].name }
 
-    dispatch(saveBeerToFavourites(beer))
+    setIsFavourite('success' + ',disabled')
+
+    dispatch(addFavourite(beer))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    dispatch(fetchRandomBeer())
   }
 
   return (
-    <div className="container">
-      <FormGroup row={true}>
-        <FormControlLabel
-          control={
-            <Switch
-              aria-label="Fahrenheit"
-              checked={imperialTemp}
-              onChange={() => setImperialTemp(!imperialTemp)}
-              color="primary"
+    <div className="container text-center">
+      <Box>
+        <Form>
+          <Form.Group>
+            <FormControlLabel
+              control={
+                <Switch
+                  aria-label="Fahrenheit"
+                  checked={imperialTemp}
+                  onChange={() => setImperialTemp(!imperialTemp)}
+                  color="primary"
+                />
+              }
+              label="Fahrenheit"
             />
-          }
-          label="Fahrenheit"
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              aria-label="Imperial Units"
-              checked={imperialUnits}
-              onChange={() => setImperialUnits(!imperialUnits)}
-              color="primary"
+            <FormControlLabel
+              control={
+                <Switch
+                  aria-label="Imperial Units"
+                  checked={imperialUnits}
+                  onChange={() => setImperialUnits(!imperialUnits)}
+                  color="primary"
+                />
+              }
+              label="Imperial Units"
             />
-          }
-          label="Imperial Units"
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              aria-label="Ounces"
-              checked={ounces}
-              onChange={() => setOunces(!ounces)}
-              color="primary"
+            <FormControlLabel
+              control={
+                <Switch
+                  aria-label="Ounces"
+                  checked={ounces}
+                  onChange={() => setOunces(!ounces)}
+                  color="primary"
+                />
+              }
+              label="Ounces"
             />
-          }
-          label="Ounces"
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              aria-label="Calories"
-              checked={kcal}
-              onChange={() => setKcal(!kcal)}
-              color="primary"
+            <FormControlLabel
+              control={
+                <Switch
+                  aria-label="Calories"
+                  checked={kcal}
+                  onChange={() => setKcal(!kcal)}
+                  color="primary"
+                />
+              }
+              label="Calories"
             />
-          }
-          label="Calories"
-        />
-      </FormGroup>
+          </Form.Group>
+        </Form>
+      </Box>
+      <Form>
+        <Button variant="primary" onClick={handleSubmit}>
+          Fetch Random Recipe
+        </Button>
+      </Form>
       {randomBeer?.map((beer) => {
         const calories = calcCalories(
           beer.target_og / 1000,
@@ -87,38 +111,19 @@ function RandomBeer() {
 
         return (
           <div key={Hash(beer)}>
-            <div className="container-header">
+            <div>
               <h1>
                 #{beer.id} {beer.name}
               </h1>
-              <div className="container-row add-to-favourites">
-                {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  fill={favourite ? 'red' : 'black'}
-                >
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg> */}
-
-                <button className="button-primary" onClick={handleFavourite}>
+              <div>
+                <Button variant={isFavourite} onClick={handleFavourite}>
                   Save to favourites!
-                </button>
+                </Button>
               </div>
               <h2>{beer.tagline}</h2>
-              {/* {beer.image_url && (
-                <div className="img-container">
-                  <img src={beer.image_url} alt={`Picture of ${beer.name}`} />
-                </div>
-              )} */}
-              <p style={{ textAlign: 'center' }}>
-                {/* Remove <twitterHandle> - which is may be a broken link */}
-                By {beer.contributed_by.replace(/<[a-zA-Z]+>/, '')}
-              </p>
               <p>{beer.description}</p>
               <h4>Food pairing</h4>
-              <table>
+              <Table>
                 <tbody>
                   <tr>
                     {beer.food_pairing.map((food) => (
@@ -126,11 +131,11 @@ function RandomBeer() {
                     ))}
                   </tr>
                 </tbody>
-              </table>
+              </Table>
             </div>
             {/* TODO Fix formatting and layout of these tables */}
-            <div className="tables-container">
-              <table>
+            <div>
+              <Table>
                 <tbody>
                   <tr>
                     <th>
@@ -224,22 +229,22 @@ function RandomBeer() {
                     )}
                   </tr>
                 </tbody>
-              </table>
+              </Table>
 
-              <h3 className="centered-text">Ingredients</h3>
+              <h3>Ingredients</h3>
               <p>{beer.brewers_tips}</p>
-              <h4 className="centered-text">Yeast</h4>
-              <table>
+              <h4>Yeast</h4>
+              <Table>
                 <tbody>
                   <tr>
                     <th scope="row">Yeast</th>
                     <td>{beer.ingredients.yeast}</td>
                   </tr>
                 </tbody>
-              </table>
+              </Table>
 
-              <h4 className="centered-text">Malt</h4>
-              <table>
+              <h4>Malt</h4>
+              <Table>
                 <tbody>
                   {beer.ingredients.malt.map((malt) => {
                     return (
@@ -263,10 +268,10 @@ function RandomBeer() {
                     )
                   })}
                 </tbody>
-              </table>
+              </Table>
 
-              <h4 className="centered-text">Hops</h4>
-              <table>
+              <h4>Hops</h4>
+              <Table>
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -311,10 +316,10 @@ function RandomBeer() {
                     )
                   })}
                 </tbody>
-              </table>
+              </Table>
 
-              <h4 className="centered-text">Methods/Timings</h4>
-              <table>
+              <h4>Methods/Timings</h4>
+              <Table>
                 <thead>
                   <tr>
                     <th>Mash Temperature</th>
@@ -346,10 +351,10 @@ function RandomBeer() {
                     )
                   })}
                 </tbody>
-              </table>
+              </Table>
 
               {beer.method.twist && (
-                <table>
+                <Table>
                   <thead>
                     <tr>
                       <th>Twist</th>
@@ -361,7 +366,7 @@ function RandomBeer() {
                       <td>{beer.method.twist}</td>
                     </tr>
                   </tbody>
-                </table>
+                </Table>
               )}
             </div>
           </div>

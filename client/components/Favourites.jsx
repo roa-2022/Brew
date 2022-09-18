@@ -1,17 +1,21 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Hash from 'hash-string'
+import { Form, Table, Button } from 'react-bootstrap'
 
-import { getFavourites, deleteBeerFromFavourites } from '../actions'
+import {
+  getFavourites,
+  deleteBeerFromFavourites,
+  editFavourite,
+} from '../actions'
 
 function Favourites() {
+  const favourites = useSelector((state) => state.favourites)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getFavourites())
   }, [])
-
-  const favourites = useSelector((state) => state.favourites)
 
   const handleClick = (id) => {
     dispatch(deleteBeerFromFavourites(id))
@@ -20,35 +24,65 @@ function Favourites() {
   return (
     <div className="container">
       <h1>Favourites</h1>
-      <table>
+      <Table hover>
         <thead>
           <tr>
             <th>ID</th>
             <th>BrewDog ID</th>
             <th>Name</th>
-            <th>Created At</th>
+            <th>Added On</th>
             <th>Brewed</th>
-            <th>Delete Favourite</th>
+            <th>Remove</th>
           </tr>
         </thead>
         <tbody>
           {favourites?.map((beer) => {
-            console.log(beer)
+            const brewedBool = Boolean(beer.brewed)
+
             return (
               <tr key={Hash(beer.id + beer.name)}>
                 <td>{beer.id}</td>
                 <td>{beer.brewdog_id}</td>
                 <td>{beer.name}</td>
-                <td>{beer.created_at}</td>
-                <td>{beer.brewed}</td>
+                <td>{new Date(beer.created_at).toLocaleDateString()}</td>
                 <td>
-                  <button onClick={() => handleClick(beer.id)}>Delete</button>
+                  {/* <label htmlFor={beer.name + 'brewed'} hidden>
+                    Brewed
+                  </label>
+                  <input
+                    type="checkbox"
+                    name={beer.name + 'brewed'}
+                    id={beer.id}
+                    checked={Boolean(beer.brewed)}
+                  /> */}
+                  <Form.Check
+                    type="checkbox"
+                    checked={brewedBool}
+                    onChange={() =>
+                      dispatch(
+                        editFavourite(beer.id, {
+                          ...beer,
+                          brewed: !beer.brewed,
+                        })
+                      )
+                    }
+                    aria-label={`Brewed ${beer.name}`}
+                  />
+                </td>
+                <td>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleClick(beer.id)}
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
             )
           })}
         </tbody>
-      </table>
+      </Table>
     </div>
   )
 }

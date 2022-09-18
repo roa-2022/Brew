@@ -1,44 +1,48 @@
-import React, { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-
-import { Box } from '@mui/material/'
+import React from 'react'
+import { NavLink } from 'react-router-dom'
+import { Container, Nav, Navbar } from 'react-bootstrap'
 
 import ScienceIcon from '@mui/icons-material/Science'
-import FavoriteIcon from '@mui/icons-material/Favorite'
 
 function App() {
-  // const fruits = useSelector((state) => state.fruits)
-  // const dispatch = useDispatch()
-  // useEffect(() => {
-  //   dispatch(fetchFruits())
-  // }, [])
-
-  const [favourite, setFavourite] = useState(false)
-
   return (
-    <Box
-      sx={{
-        backgroundColor: 'primary.dark',
-      }}
-    >
-      <Link to="/">
-        <ScienceIcon
-          style={{ color: favourite ? 'red' : 'black' }}
-          onClick={() => setFavourite(!favourite)}
-          fontSize="large"
-        />
-        <h1>Brew!</h1>
-      </Link>
-      <NavLink
-        to="/favourites"
-        style={({ isActive }) =>
-          isActive ? { color: 'hotpink' } : { color: 'black' }
-        }
-      >
-        <FavoriteIcon />
-        Favourites
-      </NavLink>
-    </Box>
+    <Navbar sticky="top" bg="light" variant="light" expand="lg">
+      <Container>
+        <Navbar.Brand href="/">
+          <ScienceIcon />
+          Brew!
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <NavLink
+              to="/favourites"
+              style={({ isActive }) =>
+                isActive ? { color: 'hotpink' } : { color: 'black' }
+              }
+            >
+              Favourites
+            </NavLink>
+            <NavLink
+              to="/search"
+              style={({ isActive }) =>
+                isActive ? { color: 'hotpink' } : { color: 'black' }
+              }
+            >
+              Search
+            </NavLink>
+            <NavLink
+              to="/random"
+              style={({ isActive }) =>
+                isActive ? { color: 'hotpink' } : { color: 'black' }
+              }
+            >
+              Random
+            </NavLink>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   )
 }
 

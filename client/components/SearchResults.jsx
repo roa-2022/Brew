@@ -1,12 +1,24 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Button, Stack, Table } from 'react-bootstrap'
 
 import { SRMToRGBCSS } from './Utils'
+
+import { addFavourite } from '../actions'
 
 import Hash from 'hash-string'
 
 function RandomBeer() {
+  const dispatch = useDispatch()
   const searchResults = useSelector((state) => state.searchBeerRecipes)
+
+  const handleFavourite = (e) => {
+    const beer = { brewdog_id: e.target.id, name: e.target.name }
+
+    e.target.className = 'btn btn-success disabled'
+
+    dispatch(addFavourite(beer))
+  }
 
   return (
     <div className="container">
@@ -21,10 +33,18 @@ function RandomBeer() {
 
         return (
           <div key={Hash(beer.id + beer.name)}>
-            <div className="container-header">
-              <h3>
+            <Stack>
+              <h3 className="text-center">
                 #{beer.id} {beer.name}
               </h3>
+              <Button
+                variant="secondary"
+                id={beer.id}
+                name={beer.name}
+                onClick={(e) => handleFavourite(e)}
+              >
+                Add to Favourites
+              </Button>
               <p>{beer.description}</p>
               <p>
                 <b>Malt:</b>{' '}
@@ -46,26 +66,30 @@ function RandomBeer() {
                 <b>Yeast:</b> {beer.ingredients.yeast}.
               </p>
               {beer.srm && (
-                <div className="container-row">
-                  <p>
-                    <b>Colour: </b>
-                  </p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    style={{ height: '45px' }}
-                  >
-                    <rect
-                      x="20"
-                      y="0"
-                      width="106.960718663"
-                      height="24.25"
-                      stroke="black"
-                      fill={SRMToRGBCSS(beer.srm)}
-                    />
-                  </svg>
-                </div>
+                <Stack direction="horizontal" gap={1}>
+                  <div>
+                    <p>
+                      <b>Colour: </b>
+                    </p>
+                  </div>
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      style={{ height: '45px' }}
+                    >
+                      <rect
+                        x="20"
+                        y="0"
+                        width="106.960718663"
+                        height="24.25"
+                        stroke="black"
+                        fill={SRMToRGBCSS(beer.srm)}
+                      />
+                    </svg>
+                  </div>
+                </Stack>
               )}
-              <table>
+              <Table>
                 <thead>
                   <tr>
                     <th>
@@ -90,8 +114,8 @@ function RandomBeer() {
                     <td>{beer.ibu}</td>
                   </tr>
                 </tbody>
-              </table>
-            </div>
+              </Table>
+            </Stack>
           </div>
         )
       })}

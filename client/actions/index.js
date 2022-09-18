@@ -3,6 +3,7 @@ import {
   getFavouritesApi,
   delFavouriteApi,
   addFavouriteApi,
+  editFavouriteApi,
 } from '../apis/favouritesApi'
 
 export const REQUEST_BEER = 'REQUEST_BEER'
@@ -18,6 +19,7 @@ export const SHOW_FAVOURITES = 'SHOW_FAVOURITES'
 
 export const SAVE_FAVOURITE = 'SAVE_FAVOURITE'
 export const DEL_FAVOURITE = 'DEL_FAVOURITE'
+export const EDIT_FAVOURITES = 'EDIT_FAVOURITES'
 
 export function requestBeer() {
   return {
@@ -76,6 +78,12 @@ export function delFavourites(beer) {
   return {
     type: DEL_FAVOURITE,
     payload: beer,
+  }
+}
+
+export function editFavourites() {
+  return {
+    type: EDIT_FAVOURITES,
   }
 }
 
@@ -145,7 +153,6 @@ export function getFavourites() {
     dispatch(fetchFavourites())
     try {
       const res = await getFavouritesApi()
-      console.log(res)
       return dispatch(showFavourites(res))
     } catch (err) {
       dispatch(showError(err.message))
@@ -157,7 +164,7 @@ export function addFavourite(beer) {
   return async (dispatch) => {
     try {
       const res = await addFavouriteApi(beer)
-      return dispatch(saveFavourite(res))
+      return dispatch(getFavourites())
     } catch (err) {
       dispatch(showError(err.message))
     }
@@ -166,10 +173,21 @@ export function addFavourite(beer) {
 
 export function deleteBeerFromFavourites(id) {
   return async (dispatch) => {
-    delFavourites(id)
+    dispatch(delFavourites(id))
     try {
       const res = await delFavouriteApi(id)
-      console.log(`Deleted ${res} rows from favourites.`)
+      return dispatch(getFavourites())
+    } catch (err) {
+      dispatch(showError(err.message))
+    }
+  }
+}
+
+export function editFavourite(id, beer) {
+  return async (dispatch) => {
+    dispatch(editFavourites())
+    try {
+      const res = await editFavouriteApi(id, beer)
       return dispatch(getFavourites())
     } catch (err) {
       dispatch(showError(err.message))
