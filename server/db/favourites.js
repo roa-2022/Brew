@@ -12,8 +12,8 @@ function getFavourite(id, db = conn) {
   return db('favourites').select().where('id', id).first()
 }
 
-function editFavourite(favourite, db = conn) {
-  return db('favourites').where('id', favourite.id).update(favourite)
+function editFavourite(id, favourite, db = conn) {
+  return db('favourites').where('id', id).update(favourite)
 }
 
 function delFavourite(id, db = conn) {

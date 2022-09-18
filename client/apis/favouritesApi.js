@@ -10,8 +10,8 @@ export async function addFavouriteApi(beer) {
   return res.body
 }
 
-export async function editFavouriteApi(beer) {
-  const res = await request.patch('/api/v1/favourites').send(beer)
+export async function editFavouriteApi(id, beer) {
+  const res = await request.patch('/api/v1/favourites/' + id).send(beer)
   return res.body
 }
 

@@ -30,9 +30,9 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.patch('/', async (req, res) => {
+router.patch('/:id', async (req, res) => {
   try {
-    const result = await db.editFavourite(req.body)
+    const result = await db.editFavourite(req.params.id, req.body)
     res.json(result)
   } catch (err) {
     res.status(500).send(err.message)

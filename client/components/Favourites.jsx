@@ -60,9 +60,9 @@ function Favourites() {
                     checked={brewedBool}
                     onChange={() =>
                       dispatch(
-                        editFavourite({
-                          id: beer.id,
-                          brewed: !brewedBool,
+                        editFavourite(beer.id, {
+                          ...beer,
+                          brewed: !beer.brewed,
                         })
                       )
                     }
