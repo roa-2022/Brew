@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Stack, Table } from 'react-bootstrap'
 
 import { SRMToRGBCSS } from './Utils'
 
@@ -21,8 +22,8 @@ function RandomBeer() {
 
         return (
           <div key={Hash(beer.id + beer.name)}>
-            <div className="container-header">
-              <h3>
+            <Stack>
+              <h3 className="text-center">
                 #{beer.id} {beer.name}
               </h3>
               <p>{beer.description}</p>
@@ -46,26 +47,30 @@ function RandomBeer() {
                 <b>Yeast:</b> {beer.ingredients.yeast}.
               </p>
               {beer.srm && (
-                <div className="container-row">
-                  <p>
-                    <b>Colour: </b>
-                  </p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    style={{ height: '45px' }}
-                  >
-                    <rect
-                      x="20"
-                      y="0"
-                      width="106.960718663"
-                      height="24.25"
-                      stroke="black"
-                      fill={SRMToRGBCSS(beer.srm)}
-                    />
-                  </svg>
-                </div>
+                <Stack direction="horizontal" gap={1}>
+                  <div>
+                    <p>
+                      <b>Colour: </b>
+                    </p>
+                  </div>
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      style={{ height: '45px' }}
+                    >
+                      <rect
+                        x="20"
+                        y="0"
+                        width="106.960718663"
+                        height="24.25"
+                        stroke="black"
+                        fill={SRMToRGBCSS(beer.srm)}
+                      />
+                    </svg>
+                  </div>
+                </Stack>
               )}
-              <table>
+              <Table>
                 <thead>
                   <tr>
                     <th>
@@ -90,8 +95,8 @@ function RandomBeer() {
                     <td>{beer.ibu}</td>
                   </tr>
                 </tbody>
-              </table>
-            </div>
+              </Table>
+            </Stack>
           </div>
         )
       })}
