@@ -7,6 +7,7 @@ import Favourites from './Favourites'
 import SearchForm from './SearchForm'
 import ErrorMessage from './ErrorMessage'
 import RandomBeer from './RandomBeer'
+import Settings from './Settings'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/search" element={<SearchForm />} />
           <Route path="/random" element={<RandomBeer />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
     </>
