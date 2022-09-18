@@ -7,7 +7,7 @@
 #### **From the command line**
 
 ```
-git clone https://github.com/brendan-jarvis/brew
+git clone https://github.com/roa-2022/brew
 cd brew/
 npm install # to install dependencies
 npm run dev # to start the dev server
